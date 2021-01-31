@@ -46,8 +46,13 @@ public class LanternController : MonoBehaviour
             gameObject.GetComponent<SpriteRenderer>().sprite = fireFullSprite;
 
             //Debug.Log("Player has contactd the lamp");
-            //SceneManager.LoadScene("SampleScene");
+            StartCoroutine(DelayedSceneLoad());
         }
     }
 
+    private IEnumerator DelayedSceneLoad()
+    {
+        yield return new WaitForSeconds(6);
+        SceneManager.LoadScene("Level2");
+    }
 }

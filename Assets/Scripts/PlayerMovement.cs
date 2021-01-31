@@ -111,7 +111,14 @@ public class PlayerMovement : MonoBehaviour
         {
             currJumpCount--;
             audioSource.PlayOneShot(fireJumpClip);
-            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            if (isGrounded)
+            {
+                rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            }
+            else
+            {
+                rb.AddForce(new Vector2(0f, jumpForce * 0.5f), ForceMode2D.Impulse);
+            }
             jumpInput = false;
         }
     }
@@ -124,7 +131,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.gravityScale = 0;
             capsuleCollider.enabled = false;
-            //sprite.enabled = false;
+            sprite.enabled = false;
             transform.position = col.gameObject.transform.position;
             moveDir = 0;
             inLamp = true;
