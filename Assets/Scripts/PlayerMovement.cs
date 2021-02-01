@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -44,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
 
         moveSpeed = 5.0f;
-        jumpForce = 8.0f;
+        jumpForce = 6.0f;
         maxJumpCount = 2;
         timeWalkingClips = 0.5f;
 
@@ -123,8 +124,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
-
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.layer == 9)
@@ -138,6 +137,20 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("Player has contactd the lamp player function");
             //SceneManager.LoadScene("SampleScene");
         }
+        else if (col.gameObject.tag == "Water")
+        {
+            Debug.Log("Player has collided with water");
+            capsuleCollider.enabled = false;
+            transform.position = new Vector3(transform.position.x, transform.position.y, 1);
+            audioSource.PlayOneShot(fireWaterDeathClip);
+            StartCoroutine(LoadSceneOnDelay(1));
+        }
+    }
+
+    private IEnumerator LoadSceneOnDelay(int delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene("GameOver");
     }
 
     //void OnTriggerEnter2D(Collider2D col)

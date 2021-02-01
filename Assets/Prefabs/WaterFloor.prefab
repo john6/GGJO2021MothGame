@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3166673293187227873}
   - component: {fileID: 2636666124196736173}
+  - component: {fileID: 2047574002236016668}
   m_Layer: 8
   m_Name: BrightFloorSprite
-  m_TagString: Untagged
+  m_TagString: Water
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -81,6 +82,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
+--- !u!70 &2047574002236016668
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1613781005341756218}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.060060468, y: -0.34708738}
+  m_Size: {x: 5.6634946, y: 0.752639}
+  m_Direction: 1
 --- !u!1 &5999609223666372388
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,7 +110,7 @@ GameObject:
   - component: {fileID: 4033046355464702014}
   m_Layer: 8
   m_Name: DarkFloorSprite
-  m_TagString: Untagged
+  m_TagString: DarkSprite
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -13,12 +13,16 @@ public class LanternController : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip LampOpenClip;
     public AudioClip LampCloseClip;
+    public AudioClip levelEndStinger;
+
+
+    GameObject manager;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        manager = GameObject.FindWithTag("GameController");
     }
 
     // Update is called once per frame
@@ -52,7 +56,22 @@ public class LanternController : MonoBehaviour
 
     private IEnumerator DelayedSceneLoad()
     {
-        yield return new WaitForSeconds(6);
-        SceneManager.LoadScene("Level2");
+        manager.GetComponent<GameManager>().audioSourceMusic.Stop();
+           yield return new WaitForSeconds(1);
+        audioSource.PlayOneShot(levelEndStinger);
+        yield return new WaitForSeconds(4);
+
+        if (SceneManager.GetActiveScene().name == "Level1")
+        {
+            SceneManager.LoadScene("Level2");
+        }
+        else if (SceneManager.GetActiveScene().name == "Level2")
+        {
+            SceneManager.LoadScene("Level3");
+        }
+        else if (SceneManager.GetActiveScene().name == "Level3")
+        {
+            SceneManager.LoadScene("EndMenu");
+        }
     }
 }

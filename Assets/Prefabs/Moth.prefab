@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1290784661}
   m_Layer: 0
   m_Name: DarkMothSprite
-  m_TagString: Untagged
+  m_TagString: DarkSprite
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -183,7 +183,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 0.15
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -217,16 +217,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e04956d58d7e7a4f949e23cbe092e4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0
   audioSource: {fileID: 7306235389948825571}
-  MothFlameDeathClip: {fileID: 8300000, guid: 8c1c84c7874fec74c97d54c0fbcb32c3, type: 3}
-  MothDingClip: {fileID: 8300000, guid: ca7f972e317f63d4d9b6e322161ccb98, type: 3}
-  MothFollowClip: {fileID: 8300000, guid: 9a849e6b662f04246821f78faa4f94c8, type: 3}
-  MothWingFlapClip: {fileID: 8300000, guid: 70ac79448be7c5743a2307a68eb2a2f0, type: 3}
+  MothFlameDeathClip: {fileID: 8300000, guid: d70dc7319a00f56448535be70b5f7f80, type: 3}
+  MothDingClip: {fileID: 8300000, guid: 98c49f08307ecca498271baa7fb9519a, type: 3}
+  MothFollowClip: {fileID: 8300000, guid: 98c49f08307ecca498271baa7fb9519a, type: 3}
+  MothWingFlapClip: {fileID: 8300000, guid: 43921df60bd6ca44eb268a6dcc17506e, type: 3}
   wingFlapClipTimer: 0
   wingFlapTime: 0
   MothLostClip: {fileID: 8300000, guid: 99552ea3e7165a141aaede54898589ce, type: 3}
   flameDeathVolume: 0
+  moveSpeed: 0
 --- !u!58 &6505405171970476945
 CircleCollider2D:
   m_ObjectHideFlags: 0

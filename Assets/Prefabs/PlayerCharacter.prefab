@@ -200,8 +200,8 @@ MonoBehaviour:
   audioSource: {fileID: 1694278643269143250}
   fireWalkClip: {fileID: 8300000, guid: 4045b0d872dde164382c7296030cdef4, type: 3}
   fireJumpClip: {fileID: 8300000, guid: bc0b0f8b29235ad4e9718cf747ba20c1, type: 3}
-  fireJumpLandClip: {fileID: 8300000, guid: 3b48c4af98e57774bbfe97a406fdafab, type: 3}
-  fireWaterDeathClip: {fileID: 8300000, guid: c93f6711f23e4024e80f276a1f842628, type: 3}
+  fireJumpLandClip: {fileID: 8300000, guid: e2245750f1784bd449b0a05f0538f51a, type: 3}
+  fireWaterDeathClip: {fileID: 8300000, guid: 1cf1efe9960742046800f9aa77029fe0, type: 3}
   timeWalkingClips: 0
   moveSpeed: 0
   checkRadius: 0.2

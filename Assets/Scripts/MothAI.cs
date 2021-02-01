@@ -5,7 +5,6 @@ using UnityEngine;
 public class MothAI : MonoBehaviour
 {
     GameObject playerRef;
-    public float moveSpeed;
     private Vector2 moveDir;
     private bool isFollowing;
 
@@ -28,6 +27,12 @@ public class MothAI : MonoBehaviour
 
     private bool facingRight = true;
 
+    //flying vars
+    public float moveSpeed;
+    private float timeTillNextFlap;
+    private float wingFlapSpeed;
+    private float wingFlapStrength;
+
 
     private void Awake()
     {
@@ -35,10 +40,15 @@ public class MothAI : MonoBehaviour
         DarkSpriteObject = transform.GetChild(0).gameObject;
 
         playerRef = GameObject.FindWithTag("Player");
-        moveSpeed = 1.5f;
+
         flameDeathVolume = 1.0f;
         wingFlapClipTimer = 0f;
-        wingFlapTime = 1.0f;
+        wingFlapTime = 1.5f;
+
+        moveSpeed = 0.5f;
+        wingFlapStrength = 1.0f;
+        timeTillNextFlap = wingFlapSpeed;
+        wingFlapSpeed = 1.3f;
     }
 
     // Start is called before the first frame update
@@ -60,22 +70,43 @@ public class MothAI : MonoBehaviour
 
     private void Simulate()
     {
+        timeTillNextFlap -= Time.deltaTime;
+
+        if (timeTillNextFlap > 0)
+        {
+            return;
+        }
+
+        timeTillNextFlap = wingFlapSpeed;
+
+        Vector2 down = new Vector2(0.0f, -1.0f);
+
+        Vector2 downWardVelocity = Vector3.Project(rb.velocity, down);
+        float increaseInSpeed = downWardVelocity.magnitude;
+        //up impulse
+        rb.AddForce(new Vector2(0.0f, wingFlapStrength + increaseInSpeed), ForceMode2D.Impulse);
+
         if (isFollowing)
         {
-            wingFlapClipTimer += Time.deltaTime;
-            if (wingFlapClipTimer > wingFlapTime)
-            {
-                audioSource.PlayOneShot(MothWingFlapClip);
-                wingFlapClipTimer = 0;
-            }
+            //wingFlapClipTimer += Time.deltaTime;
+            //if (wingFlapClipTimer > wingFlapTime)
+            //{
+            //    audioSource.PlayOneShot(MothWingFlapClip);
+            //    wingFlapClipTimer = 0;
+            //}
+            audioSource.PlayOneShot(MothWingFlapClip);
             //rb.velocity = new Vector2(moveDir * moveSpeed, rb.velocity.y);
             Vector2 playerCurrPos = new Vector2(playerRef.transform.position.x, playerRef.transform.position.y);
             Vector2 currPos = new Vector2(transform.position.x, transform.position.y);
             moveDir = playerCurrPos - currPos;
             moveDir.Normalize();
-            //rb.AddForce(moveDir, ForceMode2D.Impulse);
-            rb.velocity = new Vector2(moveDir.x * moveSpeed, moveDir.y * moveSpeed);
+
+
+            //towardPlayer impulse
+            rb.AddForce(new Vector2(moveDir.x * moveSpeed, moveDir.y * moveSpeed), ForceMode2D.Impulse);
         }
+
+
     }
 
     void OnTriggerEnter2D(Collider2D col)
