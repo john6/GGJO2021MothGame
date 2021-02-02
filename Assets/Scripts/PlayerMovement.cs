@@ -129,6 +129,7 @@ public class PlayerMovement : MonoBehaviour
         if (col.gameObject.layer == 9)
         {
             rb.gravityScale = 0;
+            rb.velocity = new Vector2(0.0f, 0.0f);
             capsuleCollider.enabled = false;
             sprite.enabled = false;
             transform.position = col.gameObject.transform.position;

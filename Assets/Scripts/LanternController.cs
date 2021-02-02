@@ -56,8 +56,8 @@ public class LanternController : MonoBehaviour
 
     private IEnumerator DelayedSceneLoad()
     {
-        manager.GetComponent<GameManager>().audioSourceMusic.Stop();
-           yield return new WaitForSeconds(1);
+        manager.GetComponent<GameManager>().audioSourceMusic.Pause();
+           yield return new WaitForSeconds(0.35f);
         audioSource.PlayOneShot(levelEndStinger);
         yield return new WaitForSeconds(4);
 
