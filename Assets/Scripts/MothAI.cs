@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ public class MothAI : MonoBehaviour
 
     private Rigidbody2D rb;
 
-    GameObject DarkSpriteObject;
+    //GameObject DarkSpriteObject;
 
     //audio vars
     public AudioSource audioSource;
@@ -37,7 +38,7 @@ public class MothAI : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        DarkSpriteObject = transform.GetChild(0).gameObject;
+        //DarkSpriteObject = transform.GetChild(0).gameObject;
 
         playerRef = GameObject.FindWithTag("Player");
 
@@ -60,7 +61,33 @@ public class MothAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckPlayerDist();
+
         Animate();
+    }
+
+    private void CheckPlayerDist()
+    {
+        float playerDist = Vector3.Distance(transform.position, playerRef.transform.position);
+        if (playerDist < 4)
+        {
+            FollowPlayer();
+        }
+        else if (playerDist >= 10)
+        {
+            StopFollowingPlayer();
+        }
+    }
+
+    private void StopFollowingPlayer()
+    {
+        //Debug.Log("Moth is following player");
+        if (isFollowing)
+        {
+            audioSource.PlayOneShot(MothLostClip, flameDeathVolume);
+            isFollowing = false;
+            playerRef.GetComponent<PlayerMovement>().currMothsFollowing--;
+        }
     }
 
     private void FixedUpdate()
@@ -103,25 +130,10 @@ public class MothAI : MonoBehaviour
 
 
             //towardPlayer impulse
-            rb.AddForce(new Vector2(moveDir.x * moveSpeed, moveDir.y * moveSpeed), ForceMode2D.Impulse);
+            rb.AddForce(new Vector2(moveDir.x * moveSpeed * 2.2f, moveDir.y * moveSpeed), ForceMode2D.Impulse);
         }
 
 
-    }
-
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        FollowPlayer(col);
-    }
-
-    private void FollowPlayer(Collider2D col)
-    {
-        //Debug.Log("Moth is following player");
-        if (col.gameObject.tag == "Player" && !isFollowing)
-        {
-            audioSource.PlayOneShot(MothFollowClip, flameDeathVolume);
-            isFollowing = true;
-        }
     }
 
     void OnCollisionEnter2D(Collision2D col)
@@ -134,12 +146,27 @@ public class MothAI : MonoBehaviour
 
     }
 
+    private void FollowPlayer()
+    {
+        //Debug.Log("Moth is following player");
+        if (!isFollowing)
+        {
+            audioSource.PlayOneShot(MothFollowClip, flameDeathVolume);
+            isFollowing = true;
+            playerRef.GetComponent<PlayerMovement>().currMothsFollowing++;
+        }
+    }
+
     private void Die()
     {
         audioSource.PlayOneShot(MothFlameDeathClip, flameDeathVolume);
         GetComponent<SpriteRenderer>().enabled = false;
-        DarkSpriteObject.GetComponent<SpriteRenderer>().enabled = false;
-        GetComponent<Collider2D>().enabled = false;
+        if (isFollowing)
+        {
+            playerRef.GetComponent<PlayerMovement>().currMothsFollowing--;
+        }
+            //DarkSpriteObject.GetComponent<SpriteRenderer>().enabled = false;
+            GetComponent<Collider2D>().enabled = false;
         //audioSource.Play();
         Destroy(gameObject, 1.5f);
     }

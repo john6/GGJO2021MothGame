@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip fireWaterDeathClip;
 
 
+    public int currMothsFollowing;
+
     public float timeWalkingClips;
     float walkingClipTimer;
 
@@ -46,10 +48,12 @@ public class PlayerMovement : MonoBehaviour
 
         moveSpeed = 5.0f;
         jumpForce = 6.0f;
-        maxJumpCount = 2;
+        maxJumpCount = 1;
         timeWalkingClips = 0.5f;
 
         inLamp = false;
+
+        currMothsFollowing = 0;
     }
 
     // Start is called before the first frame update
@@ -118,7 +122,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                rb.AddForce(new Vector2(0f, jumpForce * 0.5f), ForceMode2D.Impulse);
+                rb.AddForce(new Vector2(0f, jumpForce * 0.75f), ForceMode2D.Impulse);
             }
             jumpInput = false;
         }
@@ -126,19 +130,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.layer == 9)
-        {
-            rb.gravityScale = 0;
-            rb.velocity = new Vector2(0.0f, 0.0f);
-            capsuleCollider.enabled = false;
-            sprite.enabled = false;
-            transform.position = col.gameObject.transform.position;
-            moveDir = 0;
-            inLamp = true;
-            Debug.Log("Player has contactd the lamp player function");
-            //SceneManager.LoadScene("SampleScene");
-        }
-        else if (col.gameObject.tag == "Water")
+        if (col.gameObject.tag == "Water")
         {
             Debug.Log("Player has collided with water");
             capsuleCollider.enabled = false;
@@ -146,6 +138,19 @@ public class PlayerMovement : MonoBehaviour
             audioSource.PlayOneShot(fireWaterDeathClip);
             StartCoroutine(LoadSceneOnDelay(1));
         }
+    }
+
+    public void PlayerContactLantern(Collision2D col)
+    {
+        rb.gravityScale = 0;
+        rb.velocity = new Vector2(0.0f, 0.0f);
+        capsuleCollider.enabled = false;
+        sprite.enabled = false;
+        transform.position = col.gameObject.transform.position;
+        moveDir = 0;
+        inLamp = true;
+        Debug.Log("Player has contactd the lamp player function");
+        //SceneManager.LoadScene("SampleScene");
     }
 
     private IEnumerator LoadSceneOnDelay(int delay)

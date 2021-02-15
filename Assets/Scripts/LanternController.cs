@@ -46,11 +46,16 @@ public class LanternController : MonoBehaviour
     {
         if (col.gameObject.tag == "Player")
         {
-            audioSource.PlayOneShot(LampCloseClip);
-            gameObject.GetComponent<SpriteRenderer>().sprite = fireFullSprite;
-
-            //Debug.Log("Player has contactd the lamp");
-            StartCoroutine(DelayedSceneLoad());
+            int playerMoths = col.gameObject.GetComponent<PlayerMovement>().currMothsFollowing;
+            int levelMothReq = manager.GetComponent<GameManager>().currLevelMothReq;
+            if (playerMoths >= levelMothReq)
+            {
+                col.gameObject.GetComponent<PlayerMovement>().PlayerContactLantern(col);
+                audioSource.PlayOneShot(LampCloseClip);
+                gameObject.GetComponent<SpriteRenderer>().sprite = fireFullSprite;
+                StartCoroutine(DelayedSceneLoad());
+                //Debug.Log("Player has contactd the lamp");
+            }
         }
     }
 

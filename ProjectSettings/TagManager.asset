@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Water
   - DarkSprite
+  - UI_Text
   layers:
   - Default
   - TransparentFX

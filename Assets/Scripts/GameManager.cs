@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,13 @@ public class GameManager : MonoBehaviour
     public AudioClip EndGameStinger;
     public AudioClip generalAmbience;
     public List<SpriteRenderer> darkSprites;
+    public List<Material> darkMaterials;
+    public List<GameObject> darkMaterialObjects;
+
+    public Text MothsFollowingText;
+    public int currLevelMothReq;
+
+    public GameObject playerRef;
 
     private float levelTimeTotal;
     private float currTimeRemaining;
@@ -41,10 +49,19 @@ public class GameManager : MonoBehaviour
         // Update is called once per frame
     void Update()
     {
+        if (SceneManager.GetActiveScene().name != "MainMenu")
+        UpdateLevel();
+    }
+
+    private void UpdateLevel()
+    {
         currTimeRemaining -= Time.deltaTime;
         currTimeRemaining = Mathf.Max(currTimeRemaining, 0.0f);
         UpdateDarkSprites();
+        UpdateDarkmaterials();
+        MothsFollowingText.text = "Moths Following: " + playerRef.GetComponent<PlayerMovement>().currMothsFollowing + "/" + currLevelMothReq;
     }
+
 
     void FixedUpdate()
     {
@@ -58,7 +75,50 @@ public class GameManager : MonoBehaviour
             if (sprite)
             {
                 float colorLevel = currTimeRemaining / levelTimeTotal;
+                //float colorLevel = 1;
                 sprite.color = new Color(colorLevel, colorLevel, colorLevel);
+            }
+        }
+    }
+
+    private void GetSceneRefs()
+    {
+        playerRef = GameObject.FindGameObjectWithTag("Player");
+        MothsFollowingText = GameObject.FindGameObjectWithTag("UI_Text").GetComponent<Text>();
+    }
+
+    private void UpdateDarkmaterials()
+    {
+        //foreach (Material mat in darkMaterials)
+        //{
+        //    if (mat)
+        //    {
+        //        float colorLevel = currTimeRemaining / levelTimeTotal;
+        //        mat.SetFloat("tint", colorLevel);
+
+        //    }
+        //}
+        float colorLevel = currTimeRemaining / levelTimeTotal;
+        Color greyColor = new Color(colorLevel, colorLevel, colorLevel);
+        float screenHeight = Screen.currentResolution.height;
+        float screenWidth = Screen.currentResolution.width;
+        //Web player uninverts everything so Im gonna redo the controls I guess
+        //UNITY PLAYER & EXE VERSION
+        //Vector3 pixelPosition = new Vector3(Screen.currentResolution.width / 2, screenHeight - (playerRef.transform.position.y * 100) - 215);
+        //WEB PLAYER LOCATION
+        Vector3 pixelPosition = new Vector3(Screen.currentResolution.width / 2, (playerRef.transform.position.y * 100));
+        foreach (GameObject matObj in darkMaterialObjects)
+        {
+            if (matObj)
+            {
+                //matObj.GetComponent<Renderer>().material.SetFloat("Tint", colorLevel);
+               // Debug.Log("Tint: " + matObj.GetComponent<SpriteRenderer>().material.GetFloat("Tint"));
+
+                //matObj.GetComponent<SpriteRenderer>().material.SetColor("_Color", greyColor);
+                matObj.GetComponent<SpriteRenderer>().material.SetVector("_Light_Origin", pixelPosition);
+                matObj.GetComponent<SpriteRenderer>().material.SetFloat("_Pure_black_dist",
+                //When the level timer is early, more of the level will be colored
+                    (screenWidth * 0.25f) + ((colorLevel * 2) * (screenWidth * 0.25f)));
             }
         }
     }
@@ -70,6 +130,20 @@ public class GameManager : MonoBehaviour
         {
             darkSprites.Add(obj.GetComponent<SpriteRenderer>());
         }
+    }
+
+    private void GetDarkMaterials()
+    {
+        //GameObject[] darkGameObjects = GameObject.FindGameObjectsWithTag("DarkSprite");
+        //foreach (GameObject obj in darkGameObjects)
+        //{
+        //    darkMaterials.Add(obj.GetComponent<Material>());
+        //}
+        darkMaterialObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("DarkSprite"));
+        //foreach (GameObject obj in darkGameObjects)
+        //{
+        //    darkMaterials.Add(obj.GetComponent<Material>());
+        //}
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -86,7 +160,8 @@ public class GameManager : MonoBehaviour
         }
         if (scene.name == "Level1")
         {
-            levelTimeTotal = 30.0f;
+            levelTimeTotal = 38.0f;
+            currLevelMothReq = 3;
             currTimeRemaining = levelTimeTotal;
             darkenSpeed = 1;
 
@@ -103,11 +178,14 @@ public class GameManager : MonoBehaviour
             audioSourceAmbience.loop = true;
             audioSourceAmbience.Play();
 
+            GetSceneRefs();
             GetDarkSprites();
+            GetDarkMaterials();
         }
         else if (scene.name == "Level2")
         {
-            levelTimeTotal = 20.0f;
+            levelTimeTotal = 28.0f;
+            currLevelMothReq = 4;
             currTimeRemaining = levelTimeTotal;
             darkenSpeed = 1;
 
@@ -121,11 +199,14 @@ public class GameManager : MonoBehaviour
             audioSourceAmbience.loop = true;
             audioSourceAmbience.Play();
 
+            GetSceneRefs();
             GetDarkSprites();
+            GetDarkMaterials();
         }
         else if (scene.name == "Level3")
         {
-            levelTimeTotal = 15.0f;
+            levelTimeTotal = 25.0f;
+            currLevelMothReq = 4;
             currTimeRemaining = levelTimeTotal;
             darkenSpeed = 1;
 
@@ -139,7 +220,9 @@ public class GameManager : MonoBehaviour
             audioSourceAmbience.loop = true;
             audioSourceAmbience.Play();
 
+            GetSceneRefs();
             GetDarkSprites();
+            GetDarkMaterials();
         }
         else if (scene.name == "EndMenu")
         {
@@ -185,7 +268,6 @@ public class GameManager : MonoBehaviour
             titleSongSource.Play();
         }
     }
-
 
     public static IEnumerator StartFade(AudioSource audioSource, float duration, float targetVolume)
     {
